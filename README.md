@@ -21,7 +21,7 @@ This is a **demonstration project** showcasing modern React development practice
 - ✅ Real-time price data from CoinGecko API
 
 **Demo Limitations:**
-- Simplified error handling for edge cases
+- Not all edge cases covered.
 - Mock wallet transactions (no real swaps)  
 - Demo use - not production-ready
 
