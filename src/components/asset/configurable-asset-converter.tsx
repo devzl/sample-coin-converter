@@ -43,15 +43,6 @@ export default function ConfigurableAssetConverter({
   const [showWalletModal, setShowWalletModal] = useState(false);
 
   const { data: priceData, isLoading, error, refetch } = useAssetPrice(assetPair);
-  const { isConnected, status } = useAccount();
-
-  // Monitor wallet state changes in main converter
-  useEffect(() => {
-    // Close wallet modal if wallet gets disconnected
-    if (!isConnected && status === 'disconnected' && showWalletModal) {
-      setShowWalletModal(false);
-    }
-  }, [isConnected, status, showWalletModal]);
 
   const outputAsset: AssetConfig =
     inputAsset.id === assetPair.base.id ? assetPair.quote : assetPair.base;
