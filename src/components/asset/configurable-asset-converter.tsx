@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import { RefreshCw } from 'lucide-react';
 import { showDemoConversionToast } from '@/lib/toast-utils';
-import { useAccount } from 'wagmi';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { AssetPair, PreciseConversionResult, AssetConfig } from '@/types/asset';
