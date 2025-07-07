@@ -77,4 +77,15 @@ export function showPriceFetchErrorToast(assetSymbol: string): void {
     description: `Failed to fetch ${assetSymbol} price data. Please try refreshing.`,
     duration: TOAST_CONFIG.duration.medium,
   });
+}
+
+/**
+ * Show WalletConnect configuration warning toast
+ */
+export function showWalletConnectConfigWarningToast(): void {
+  toast.warning('WalletConnect Not Configured', {
+    description: 'NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID is not set. Demo continues but some wallet connection errors may occur.',
+    duration: TOAST_CONFIG.duration.long,
+    className: TOAST_CONFIG.classes.warning,
+  });
 } 

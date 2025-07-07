@@ -24,7 +24,7 @@ A modern, modular React application for converting between multiple cryptocurren
 - **Collapsible Asset Selection**: Clean interface with expandable asset pair selector
 - **Smart Currency Toggle**: Intelligent conversion transfer between asset modes
 - **Enhanced UI**: Modern, responsive design with asset-specific icons
-- **Precise Decimal Handling**: Asset-specific decimal formatting (USD: 2, crypto: 8)
+- **Precise Decimal Handling**: USD (2), wBTC (8), ETH (18), SOL (9) decimal precision
 - **Robust Error Handling**: Comprehensive error states and user-friendly error messages
 
 ### 🔗 Web3 Integration
@@ -156,7 +156,18 @@ src/
    npm run dev
    ```
 
-4. **Open your browser**
+4. **Environment Configuration (Optional)**
+   ```bash
+   # Create .env.local file in the root directory
+   touch .env.local
+   
+   # Add WalletConnect Project ID (optional)
+   echo "NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=your_project_id_here" >> .env.local
+   ```
+   
+   **Note**: If `NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID` is not configured, you may see WalletConnect-related errors in the console. The application will still function as a demo, but some wallet connection features may not work properly.
+
+5. **Open your browser**
    Navigate to [http://localhost:3000](http://localhost:3000)
 
 ## Asset Configuration
