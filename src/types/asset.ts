@@ -22,6 +22,13 @@ export interface ConversionResult {
   formatted: string;
 }
 
+export interface PreciseConversionResult {
+  amount: bigint;
+  asset: AssetConfig;
+  formatted: string;
+  humanReadable: string;
+}
+
 export interface PriceData {
   price: number;
   lastUpdated: Date;
@@ -51,7 +58,7 @@ export const ASSETS: Record<string, AssetConfig> = {
     id: 'ethereum',
     symbol: 'ETH',
     name: 'Ethereum',
-    decimals: 8,
+    decimals: 18,
     icon: 'https://assets.coingecko.com/coins/images/279/standard/ethereum.png?1696501628',
     apiId: 'ethereum',
   },

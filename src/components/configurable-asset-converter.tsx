@@ -2,22 +2,24 @@
 
 import { useState, useEffect } from 'react';
 import { RefreshCw } from 'lucide-react';
+import { showDemoConversionToast } from '@/lib/toast-utils';
+import { useAccount } from 'wagmi';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { AssetPair, ConversionResult as ConversionResultType, AssetConfig } from '@/types/asset';
+import { AssetPair, PreciseConversionResult, AssetConfig } from '@/types/asset';
 import { useAssetPrice } from '@/hooks/useAssetPrice';
 import { 
-  validateAssetInput, 
-  convertToQuoteAsset, 
-  convertToBaseAsset, 
-  formatAssetAmount 
-} from '@/lib/asset-api';
+  performSafeBigIntConversion, 
+  createPreciseConversionResult,
+  validateAssetInput as validateBigIntInput 
+} from '@/lib/bigint-conversion-utils';
 import { PriceDisplay } from '@/components/asset/price-display';
 import { CurrencyInput } from '@/components/asset/currency-input';
 import { ConversionResult } from '@/components/asset/conversion-result';
 import { ErrorDisplay } from '@/components/asset/error-display';
 import { CurrencySwitchButton } from '@/components/asset/currency-switch-button';
 import { ContractInfo } from '@/components/asset/contract-info';
+import ConversionWalletModal from '@/components/wallet/conversion-wallet-modal';
 
 interface ConfigurableAssetConverterProps {
   assetPair: AssetPair;
@@ -32,13 +34,23 @@ export default function ConfigurableAssetConverter({
 }: ConfigurableAssetConverterProps) {
   const [inputValue, setInputValue] = useState('');
   const [inputAsset, setInputAsset] = useState<AssetConfig>(assetPair.base);
-  const [conversionResult, setConversionResult] = useState<ConversionResultType | null>(null);
+  const [conversionResult, setConversionResult] = useState<PreciseConversionResult | null>(null);
   const [validationError, setValidationError] = useState<string | null>(null);
   const [isConverting, setIsConverting] = useState(false);
   const [isManualRefreshing, setIsManualRefreshing] = useState(false);
   const [priceChangeAnimation, setPriceChangeAnimation] = useState(false);
+  const [showWalletModal, setShowWalletModal] = useState(false);
 
   const { data: priceData, isLoading, error, refetch } = useAssetPrice(assetPair);
+  const { isConnected, status } = useAccount();
+
+  // Monitor wallet state changes in main converter
+  useEffect(() => {
+    // Close wallet modal if wallet gets disconnected
+    if (!isConnected && status === 'disconnected' && showWalletModal) {
+      setShowWalletModal(false);
+    }
+  }, [isConnected, status, showWalletModal]);
 
   const outputAsset: AssetConfig = inputAsset.id === assetPair.base.id ? assetPair.quote : assetPair.base;
 
@@ -79,12 +91,16 @@ export default function ConfigurableAssetConverter({
 
   const handleInputChange = (value: string) => {
     setInputValue(value);
+    
+    // Always clear validation error first
     setValidationError(null);
     
-    // Validate input format
-    const validation = validateAssetInput(value, inputAsset.decimals);
-    if (value.trim() && !validation.isValid) {
-      setValidationError(validation.error || null);
+    // Only validate if there's actual input
+    if (value.trim()) {
+      const validation = validateBigIntInput(value);
+      if (!validation.isValid) {
+        setValidationError(validation.error || null);
+      }
     }
   };
 
@@ -98,35 +114,51 @@ export default function ConfigurableAssetConverter({
       return;
     }
 
-    const validation = validateAssetInput(inputValue, inputAsset.decimals);
+    const validation = validateBigIntInput(inputValue);
     if (!validation.isValid) {
       setValidationError(validation.error || null);
       setConversionResult(null);
       return;
     }
 
+    // Clear any previous validation errors
+    setValidationError(null);
+
+    // Perform the conversion calculation and show results
+    performActualConversion();
+  };
+
+  const performActualConversion = async () => {
+    if (!inputValue.trim() || !priceData) return;
+
     setIsConverting(true);
     setValidationError(null);
 
     try {
-      const inputAmount = parseFloat(inputValue);
-      let outputAmount: number;
+      const fromBaseToQuote = inputAsset.id === assetPair.base.id;
+      
+      // Use the precise BigInt conversion
+      const conversionResult = performSafeBigIntConversion(
+        inputValue,
+        inputAsset,
+        outputAsset,
+        priceData.price,
+        fromBaseToQuote
+      );
 
-      if (inputAsset.id === assetPair.base.id) {
-        // Converting from base to quote (e.g., USD to wBTC)
-        outputAmount = convertToQuoteAsset(inputAmount, priceData.price);
-      } else {
-        // Converting from quote to base (e.g., wBTC to USD)
-        outputAmount = convertToBaseAsset(inputAmount, priceData.price);
+      if (!conversionResult.isValid) {
+        setValidationError(conversionResult.error || 'Conversion failed');
+        setConversionResult(null);
+        return;
       }
 
-      const formatted = formatAssetAmount(outputAmount, outputAsset.decimals);
+      // Create the precise conversion result
+      const preciseResult = createPreciseConversionResult(
+        conversionResult.amount,
+        outputAsset
+      );
 
-      setConversionResult({
-        amount: outputAmount,
-        asset: outputAsset,
-        formatted,
-      });
+      setConversionResult(preciseResult);
     } catch (error) {
       console.error('Conversion error:', error);
       setValidationError('Conversion failed. Please try again.');
@@ -136,42 +168,46 @@ export default function ConfigurableAssetConverter({
     }
   };
 
+  const handleDemoConversion = () => {
+    showDemoConversionToast(inputAsset.symbol, outputAsset.symbol);
+  };
+
   const handleSwitchCurrencies = async () => {
     const newInputAsset = inputAsset.id === assetPair.base.id ? assetPair.quote : assetPair.base;
     
     // If there's a conversion result, move the converted amount to the input and auto-convert
     if (conversionResult && priceData && !error) {
-      // Format the amount according to the new currency's precision
-      const formattedAmount = newInputAsset.decimals === 2 
-        ? conversionResult.amount.toFixed(2)
-        : conversionResult.amount.toFixed(8).replace(/\.?0+$/, ''); // Remove trailing zeros
+      // Use the humanReadable format for the input
+      const humanReadableAmount = conversionResult.humanReadable;
       
-      setInputValue(formattedAmount);
+      setInputValue(humanReadableAmount);
       setInputAsset(newInputAsset);
       setConversionResult(null);
       setValidationError(null);
       
       // Auto-convert the switched amount
       try {
-        const inputAmount = conversionResult.amount;
-        let outputAmount: number;
         const newOutputAsset = newInputAsset.id === assetPair.base.id ? assetPair.quote : assetPair.base;
+        const fromBaseToQuote = newInputAsset.id === assetPair.base.id;
         
-        if (newInputAsset.id === assetPair.base.id) {
-          // New input is base asset, convert to quote
-          outputAmount = convertToQuoteAsset(inputAmount, priceData.price);
+        // Use the precise BigInt conversion for auto-conversion
+        const newConversionResult = performSafeBigIntConversion(
+          humanReadableAmount,
+          newInputAsset,
+          newOutputAsset,
+          priceData.price,
+          fromBaseToQuote
+        );
+
+        if (newConversionResult.isValid) {
+          const preciseResult = createPreciseConversionResult(
+            newConversionResult.amount,
+            newOutputAsset
+          );
+          setConversionResult(preciseResult);
         } else {
-          // New input is quote asset, convert to base
-          outputAmount = convertToBaseAsset(inputAmount, priceData.price);
+          setValidationError(newConversionResult.error || 'Auto-conversion failed');
         }
-        
-        const formatted = formatAssetAmount(outputAmount, newOutputAsset.decimals);
-        
-        setConversionResult({
-          amount: outputAmount,
-          asset: newOutputAsset,
-          formatted,
-        });
       } catch (error) {
         console.error('Auto-conversion error:', error);
         setValidationError('Auto-conversion failed. Please try again.');
@@ -253,7 +289,18 @@ export default function ConfigurableAssetConverter({
 
           {/* Conversion Result */}
           {conversionResult && !error && priceData && (
-            <ConversionResult result={conversionResult} priceData={priceData} />
+            <div className="space-y-4">
+              <ConversionResult result={conversionResult} priceData={priceData} />
+              
+              {/* Demo Conversion Button */}
+              <Button
+                onClick={() => setShowWalletModal(true)}
+                className="w-full"
+                variant="secondary"
+              >
+                🎯 Simulate Conversion with Wallet
+              </Button>
+            </div>
           )}
 
           {/* Error Display - Only show when there's an error and no conversion result */}
@@ -277,6 +324,15 @@ export default function ConfigurableAssetConverter({
 
       {/* Contract Information */}
       <ContractInfo asset={assetPair.quote} />
+      
+      {/* Wallet Modal */}
+      {showWalletModal && (
+        <ConversionWalletModal
+          assetPair={assetPair}
+          onClose={() => setShowWalletModal(false)}
+          onDemoConversion={handleDemoConversion}
+        />
+      )}
     </div>
   );
 } 

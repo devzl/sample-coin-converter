@@ -120,3 +120,15 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Toast styling for better readability */
+.toast-demo-conversion [data-description] {
+  color: hsl(var(--foreground)) !important;
+  opacity: 0.9 !important;
+}
+
+/* Global Sonner toast description styling */
+[data-sonner-toast] [data-description] {
+  color: hsl(var(--foreground)) !important;
+  opacity: 0.85 !important;
+}

@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import QueryProvider from "@/providers/query-provider";
+import Web3Provider from '@/components/providers/web3-provider';
+import Header from '@/components/layout/header';
+import { Toaster } from '@/components/ui/sonner';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,7 +18,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "wBTC Asset Converter",
-  description: "Convert between USD and Wrapped Bitcoin (wBTC)",
+  description: "Convert between USD and cryptocurrency assets with Web3 wallet integration",
 };
 
 export default function RootLayout({
@@ -29,7 +32,11 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <QueryProvider>
-          {children}
+          <Web3Provider>
+            <Header />
+            {children}
+            <Toaster />
+          </Web3Provider>
         </QueryProvider>
       </body>
     </html>

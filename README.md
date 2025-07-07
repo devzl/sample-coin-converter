@@ -6,11 +6,20 @@ A modern, modular React application for converting between multiple cryptocurren
 
 ### ✅ Core Functionality
 - **Multi-Asset Support**: Convert between USD/wBTC, USD/ETH, and USD/SOL pairs
+- **Web3 Wallet Integration**: ConnectKit + wagmi for Ethereum wallet connectivity
 - **Collapsible Asset Selection**: Clean interface with expandable asset pair selector
 - **Smart Currency Toggle**: Intelligent conversion transfer between asset modes
 - **Enhanced UI**: Modern, responsive design with asset-specific icons
 - **Configurable Precision**: Asset-specific decimal formatting (USD: 2, crypto: 8)
 - **Robust Error Handling**: Comprehensive error states and user-friendly error messages
+
+### 🔗 Web3 Integration
+- **Wallet Connection**: Support for MetaMask, WalletConnect, and injected wallets
+- **Network Validation**: Automatic Ethereum Mainnet detection and switching
+- **Blockchain Awareness**: Asset-specific network requirements with clear messaging
+- **Demo Mode**: Safe demonstration of conversion flow without real transactions
+- **Cross-Chain Support**: Proper handling of assets on different blockchains (Ethereum vs Solana)
+- **User Experience**: Intuitive wallet status indicators and network switching prompts
 
 ### 🏗️ Modular Architecture
 - **Reusable Components**: Broken down into focused, reusable UI components
@@ -32,8 +41,11 @@ A modern, modular React application for converting between multiple cryptocurren
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS with shadcn/ui components
 - **State Management**: React hooks + React Query
-- **API**: CoinGecko API for Bitcoin pricing
+- **Web3**: wagmi + viem + ConnectKit for wallet integration
+- **UI Components**: shadcn/ui (Alert, Button, Card, Input, Label, Sonner)
+- **API**: CoinGecko API for real-time cryptocurrency pricing
 - **Icons**: Lucide React
+- **Notifications**: Sonner for toast notifications
 
 ## Project Structure
 
@@ -45,10 +57,12 @@ src/
 │   └── page.tsx             # Main page with asset selector
 ├── components/
 │   ├── ui/                  # shadcn/ui components
+│   │   ├── alert.tsx        # Alert component for notifications
 │   │   ├── button.tsx
 │   │   ├── card.tsx
 │   │   ├── input.tsx
-│   │   └── label.tsx
+│   │   ├── label.tsx
+│   │   └── sonner.tsx       # Toast notifications
 │   ├── asset/               # Modular asset converter components
 │   │   ├── price-display.tsx        # Price display with refresh
 │   │   ├── currency-input.tsx       # Asset input with validation
@@ -56,11 +70,18 @@ src/
 │   │   ├── error-display.tsx        # Error handling
 │   │   ├── currency-switch-button.tsx # Currency switching
 │   │   └── contract-info.tsx        # Contract information
+│   ├── layout/              # Layout components
+│   │   └── header.tsx               # Top navigation with wallet connection
+│   ├── providers/           # Context providers
+│   │   └── web3-provider.tsx        # Web3 wallet provider
+│   ├── wallet/              # Web3 wallet components
+│   │   └── conversion-wallet-modal.tsx  # Modal for wallet requirements on conversion
 │   └── configurable-asset-converter.tsx # Main orchestrator component
 ├── hooks/
 │   └── useAssetPrice.ts     # Generic React Query hook for asset pricing
 ├── lib/
 │   ├── asset-api.ts         # Generic asset API functions
+│   ├── wagmi-config.ts      # Web3 wallet configuration
 │   └── utils.ts             # Utility functions
 ├── providers/
 │   └── query-provider.tsx   # React Query provider
@@ -136,6 +157,7 @@ src/
 1. Enter an amount in the input field (base asset by default)
 2. Click "Convert to [Asset]" to see the equivalent amount
 3. Results display with proper formatting: "Amount of [Asset]: X.XXXXXXXX tokens"
+4. Click "🎯 Simulate Conversion with Wallet" to proceed with Web3 wallet integration
 
 ### Smart Currency Toggle
 1. Click "Switch Currencies" to toggle between input asset modes
@@ -152,6 +174,18 @@ src/
 - **Manual Refresh**: Instant refresh with loading states
 - **Transparency**: Last updated timestamps for all price data
 
+### Web3 Wallet Integration
+1. **Top Menu Bar**: Connect your wallet using the "Connect Wallet" button in the top-right corner (standard DApp pattern)
+2. **Price Conversion**: Enter an amount and click "Convert to [Asset]" to see conversion results
+3. **Wallet Simulation**: After seeing conversion results, click "🎯 Simulate Conversion with Wallet" to trigger wallet requirements
+4. **Smart Wallet Modal**: 
+   - **Not Connected**: Shows wallet connection options
+   - **Wrong Network**: Prompts to switch to Ethereum Mainnet for wBTC/ETH
+   - **Solana Assets**: Shows "incorrect blockchain network" warning with "Solana currently unsupported" message
+   - **Ready**: Shows "🎯 Proceed with Demo Conversion" button
+5. **Network Switching**: One-click network switching when connected to wrong network
+6. **Demo Mode**: Safe conversion demonstration with toast notifications
+
 ## Error Handling
 
 ### Input Validation
@@ -165,12 +199,19 @@ src/
 - Retry mechanism for failed requests
 - Loading states during data fetching
 
-### Future Web3 Considerations
-For production deployment, consider implementing:
-- Web3 wallet connection (MetaMask, WalletConnect)
-- Network validation (Ethereum Mainnet)
-- Smart contract interaction for real-time wBTC data
-- Transaction capabilities
+### Web3 Implementation Status
+**✅ Implemented:**
+- Web3 wallet connection (MetaMask, WalletConnect, injected wallets)
+- Network validation and automatic switching (Ethereum Mainnet)
+- Asset-specific blockchain requirements and messaging
+- Demo mode with safe conversion simulation
+
+**🔮 Future Enhancements:**
+- Smart contract interaction for real-time on-chain wBTC data
+- Actual transaction execution and swap functionality
+- Multi-chain wallet support (Solana, Polygon, etc.)
+- Token balance display and validation
+- Slippage settings and MEV protection
 
 ## Development
 
