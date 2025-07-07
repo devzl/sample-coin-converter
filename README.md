@@ -156,16 +156,16 @@ src/
    npm run dev
    ```
 
-4. **Environment Configuration (Optional)**
+4. **Environment Configuration (Optional - WalletConnect)**
    ```bash
-   # Create .env.local file in the root directory
+   # Create .env.local file in the root directory (optional)
    touch .env.local
    
-   # Add WalletConnect Project ID (optional)
+   # Add WalletConnect Project ID (optional - only needed for mobile wallet support)
    echo "NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=your_project_id_here" >> .env.local
    ```
    
-   **Note**: If `NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID` is not configured, you may see WalletConnect-related errors in the console. The application will still function as a demo, but some wallet connection features may not work properly.
+   **Note**: WalletConnect is entirely optional. The application works perfectly with browser-injected wallets (MetaMask, Coinbase Wallet, etc.) without any environment configuration. WalletConnect is only needed if you want to support mobile wallet connections via QR code scanning.
 
 5. **Open your browser**
    Navigate to [http://localhost:3000](http://localhost:3000)
