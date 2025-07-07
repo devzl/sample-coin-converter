@@ -160,7 +160,7 @@ export default function ConversionWalletModal({
             {networkStatus.action === 'convert' && (
               <Button 
                 onClick={handleDemoConversion}
-                className="w-full"
+                className="w-full cursor-pointer"
               >
                 🎯 Proceed with Demo Conversion
               </Button>

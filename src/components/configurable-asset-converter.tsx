@@ -293,7 +293,7 @@ export default function ConfigurableAssetConverter({
               {/* Demo Conversion Button */}
               <Button
                 onClick={() => setShowWalletModal(true)}
-                className="w-full"
+                className="w-full cursor-pointer"
                 variant="secondary"
               >
                 🎯 Simulate Conversion with Wallet
