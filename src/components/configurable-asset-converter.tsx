@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { AssetPair, PreciseConversionResult, AssetConfig } from '@/types/asset';
 import { useAssetPrice } from '@/hooks/useAssetPrice';
+import { useContractData } from '@/hooks/useContractData';
 import { 
   performSafeBigIntConversion, 
   createPreciseConversionResult,
@@ -53,6 +54,9 @@ export default function ConfigurableAssetConverter({
   }, [isConnected, status, showWalletModal]);
 
   const outputAsset: AssetConfig = inputAsset.id === assetPair.base.id ? assetPair.quote : assetPair.base;
+  
+  // Read contract data for assets with contract addresses (like wBTC)
+  const contractData = useContractData(outputAsset.contractAddress);
 
   useEffect(() => {
     // Clear conversion result whenever input changes
@@ -252,6 +256,7 @@ export default function ConfigurableAssetConverter({
             isRefreshing={isManualRefreshing}
             priceChangeAnimation={priceChangeAnimation}
             onRefresh={handleRefresh}
+            contractData={contractData}
           />
 
           {/* Input Section */}

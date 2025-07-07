@@ -10,6 +10,15 @@ interface ConversionResultProps {
 export function ConversionResult({ result, priceData }: ConversionResultProps) {
   if (!priceData) return null;
 
+  // Improvement: Consider displaying asset logo/icon next to the amount for better visual identification
+  // Could also show full token name (e.g., "Wrapped Bitcoin" instead of "wBTC") for better user understanding
+  const getDisplaySuffix = (assetSymbol: string): string => {
+    // For fiat currencies like USD, no suffix needed
+    if (assetSymbol === 'USD') return '';
+    // For crypto assets, use "tokens"
+    return 'tokens';
+  };
+
   return (
     <div className="p-4 bg-primary/5 border border-primary/20 rounded-lg">
       <div className="flex items-center gap-2 mb-2">
@@ -18,7 +27,7 @@ export function ConversionResult({ result, priceData }: ConversionResultProps) {
       </div>
       <p className="text-lg">
         <span className="font-bold">
-          Amount of {result.asset.symbol}: {result.formatted} {result.asset.symbol}
+          Amount of {result.asset.symbol}: {result.formatted} {getDisplaySuffix(result.asset.symbol)}
         </span>
       </p>
       <p className="text-sm text-muted-foreground mt-1">

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { ChevronDown, ChevronUp, Settings } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -34,7 +35,7 @@ export default function AssetPairSelector({
   const renderAssetIcon = (icon: string | undefined) => {
     if (!icon) return null;
     if (icon.startsWith('http')) {
-      return <img src={icon} alt="" className="w-5 h-5" />;
+      return <Image src={icon} alt="" width={20} height={20} className="w-5 h-5" />;
     }
     return <span className="text-lg">{icon}</span>;
   };

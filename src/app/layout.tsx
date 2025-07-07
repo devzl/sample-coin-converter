@@ -34,7 +34,7 @@ export default function RootLayout({
         <QueryProvider>
           <Web3Provider>
             <Header />
-            {children}
+              {children}
             <Toaster />
           </Web3Provider>
         </QueryProvider>

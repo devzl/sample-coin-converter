@@ -3,12 +3,20 @@ import { Button } from '@/components/ui/button';
 import { PriceData } from '@/types/asset';
 import { formatAssetAmount } from '@/lib/asset-api';
 
+interface ContractData {
+  decimals: number | null;
+  symbol: string | null;
+  isLoading: boolean;
+  isConnected: boolean;
+}
+
 interface PriceDisplayProps {
   priceData?: PriceData;
   isLoading: boolean;
   isRefreshing: boolean;
   priceChangeAnimation: boolean;
   onRefresh: () => void;
+  contractData?: ContractData;
 }
 
 export function PriceDisplay({ 
@@ -16,7 +24,8 @@ export function PriceDisplay({
   isLoading, 
   isRefreshing, 
   priceChangeAnimation, 
-  onRefresh 
+  onRefresh,
+  contractData
 }: PriceDisplayProps) {
   return (
     <div className="p-4 bg-muted rounded-lg">
@@ -50,6 +59,24 @@ export function PriceDisplay({
           </Button>
         </div>
       </div>
+      
+      {/* On-chain contract data display */}
+      {contractData?.isConnected && (contractData.decimals !== null || contractData.symbol !== null) && (
+        <div className="mt-2 pt-2 border-t border-muted-foreground/20">
+          <p className="text-xs text-muted-foreground">
+            On-chain data: {contractData.isLoading ? (
+              <span className="animate-pulse">Loading...</span>
+            ) : (
+              <>
+                {contractData.symbol && <span>Symbol: {contractData.symbol}</span>}
+                {contractData.symbol && contractData.decimals !== null && <span> • </span>}
+                {contractData.decimals !== null && <span>Decimals: {contractData.decimals}</span>}
+              </>
+            )}
+          </p>
+        </div>
+      )}
+      
       {priceData && (
         <p className="text-xs text-muted-foreground mt-1">
           Last updated: {priceData.lastUpdated.toLocaleTimeString()}

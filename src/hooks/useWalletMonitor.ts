@@ -71,9 +71,7 @@ export function useWalletMonitor(config: WalletMonitorConfig = {}): WalletMonito
       previousStateRef.current = walletState;
     }
   }, [
-    walletState.isConnected,
-    walletState.address,
-    walletState.status,
+    walletState,
     onWalletConnected,
     onWalletDisconnected,
     trackConnectionChanges,
@@ -88,7 +86,7 @@ export function useWalletMonitor(config: WalletMonitorConfig = {}): WalletMonito
     if (previousState?.chainId !== chainId) {
       onNetworkChanged?.(chainId);
     }
-  }, [chainId, onNetworkChanged, trackNetworkChanges, walletState]);
+  }, [chainId, onNetworkChanged, trackNetworkChanges]);
 
   // Auto-close functionality
   useEffect(() => {
