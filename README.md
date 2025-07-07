@@ -1,19 +1,43 @@
-# Configurable Asset Converter
+# Sample Coin Converter
 
-A modern, modular React application for converting between multiple cryptocurrency assets with real-time pricing data and bank-grade precision calculations. Built with Next.js 15, React 19, TypeScript, and shadcn/ui components.
+![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=flat&logo=typescript&logoColor=white)
+![Next.js](https://img.shields.io/badge/Next.js-000000?style=flat&logo=next.js&logoColor=white)
+![React](https://img.shields.io/badge/React-61DAFB?style=flat&logo=react&logoColor=black)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=flat&logo=tailwind-css&logoColor=white)
 
-## 🚨 Demo Application Disclaimer
+A modern React application demonstrating cryptocurrency asset conversion with real-time pricing and Web3 wallet integration. Features bank-grade precision calculations using BigInt arithmetic and a modular component architecture.
 
-**This is a sample/demo application.** While it implements modern React development practices, architectural patterns, and mathematical precision with BigInt calculations, it is not intended for production use. 
+Built with **Next.js 15**, **React 19**, **TypeScript**, and **shadcn/ui**.
 
-**Limitations:**
-- Not all edge cases are covered
-- Limited error handling for extreme scenarios
-- Demo-only wallet integration (no real transactions)
-- Simplified API error recovery
-- Basic input validation (production would require more comprehensive validation)
+## 🎯 Demo Application
 
-**Intended Use:** This application includes code organization, testing practices, and technical implementation patterns but is not a complete production-ready solution.
+This is a **demonstration project** showcasing modern React development practices and DeFi integration patterns. It implements production-grade architectural patterns while serving as an educational example.
+
+**Key Highlights:**
+- ✅ BigInt precision mathematics (no floating-point errors)  
+- ✅ Web3 wallet integration with ConnectKit + wagmi
+- ✅ Modular component architecture with TypeScript
+- ✅ Comprehensive testing with vitest
+- ✅ Real-time price data from CoinGecko API
+
+**Demo Limitations:**
+- Simplified error handling for edge cases
+- Mock wallet transactions (no real swaps)  
+- Demo use - not production-ready
+
+## 🚀 Quick Start
+
+```bash
+# Clone and install
+git clone git@github.com:devzl/sample-coin-converter.git
+cd sample-coin-converter
+bun install
+
+# Start development server
+bun dev
+```
+
+Then open [http://localhost:3000](http://localhost:3000) in your browser!
 
 ## Features
 
@@ -128,42 +152,35 @@ src/
 ## Installation & Setup
 
 ### Prerequisites
-- Node.js 18+ or Bun runtime
-- Git
+- **Node.js 18+** or **Bun runtime**
+- **Git**
 
-### Installation Steps
+### Get Started
 
-1. **Clone the repository**
-   ```bash
-   git clone git@github.com:devzl/sample-coin-converter.git
-   cd sample-coin-converter
-   ```
+```bash
+# Clone the repository
+git clone git@github.com:devzl/sample-coin-converter.git
+cd sample-coin-converter
 
-2. **Install dependencies**
-   ```bash
-   # Using bun (recommended)
-   bun install
-   ```
+# Install dependencies (Bun recommended)
+bun install
 
-3. **Run the development server**
-   ```bash
-   # Using bun
-   bun dev
-   ```
+# Start development server
+bun dev
+```
 
-4. **Environment Configuration (Optional - WalletConnect)**
-   ```bash
-   # Create .env.local file in the root directory (optional)
-   touch .env.local
-   
-   # Add WalletConnect Project ID (optional - only needed for mobile wallet support)
-   echo "NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=your_project_id_here" >> .env.local
-   ```
-   
-   **Note**: WalletConnect is entirely optional. The application works perfectly with browser-injected wallets (MetaMask, Vultisig, Coinbase Wallet, etc.) without any environment configuration. WalletConnect is only needed if you want to support mobile wallet connections via QR code scanning.
+**🎉 That's it!** Open [http://localhost:3000](http://localhost:3000) to see the app.
 
-5. **Open your browser**
-   Navigate to [http://localhost:3000](http://localhost:3000)
+### Optional: WalletConnect Setup
+
+For mobile wallet QR code support, add a WalletConnect Project ID:
+
+```bash
+# Create environment file
+echo "NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=your_project_id_here" > .env.local
+```
+
+> **Note**: The app works perfectly with browser wallets (MetaMask, Vultisig, etc.) without any setup. WalletConnect is only needed for mobile wallet connections.
 
 ## Asset Configuration
 
@@ -187,45 +204,27 @@ src/
 
 ## Usage
 
-### Asset Pair Selection
-1. Click "Change Asset Pair" at the bottom to expand the selector
-2. Choose your desired asset pair (USD/wBTC, USD/ETH, USD/SOL)
-3. The converter updates immediately with the selected pair's pricing and icons
-4. Selector auto-collapses after selection for a clean interface
-5. Each pair has its own optimized configuration and contract information
+### 💰 Converting Assets
 
-### Basic Conversion
-1. Enter an amount in the input field (base asset by default)
-2. Click "Convert to [Asset]" to see the equivalent amount
-3. Results display with proper formatting and BigInt precision
-4. Click "🎯 Simulate Conversion with Wallet" to proceed with Web3 wallet integration
+1. **Select Asset Pair**: Click "Change Asset Pair" to choose USD/wBTC, USD/ETH, or USD/SOL
+2. **Enter Amount**: Type the amount you want to convert
+3. **Convert**: Click "Convert to [Asset]" to see real-time conversion
+4. **Switch**: Use "Switch Currencies" to reverse the conversion direction
 
-### Smart Currency Toggle
-1. Click "Switch Currencies" to toggle between input asset modes
-2. Interface updates with appropriate currency symbols, icons, and precision
-3. Asset-specific icons appear for visual confirmation
-4. **Intelligent Switch**: With existing conversion results:
-   - Converted amount transfers to input field
-   - Automatic reverse conversion occurs
-   - Seamless bidirectional conversion experience
+### 🔗 Web3 Features
 
-### Real-time Updates
-- Asset prices update automatically every 30 seconds
-- **Visual Animation**: Price field animates when updated (subtle scaling + color)
-- **Manual Refresh**: Instant refresh with loading states
-- **Transparency**: Last updated timestamps for all price data
+1. **Connect Wallet**: Click "Connect Wallet" in the top-right corner
+2. **Demo Conversion**: After converting, click "🎯 Simulate Conversion with Wallet"
+3. **Network Switching**: Automatically prompts to switch to correct network
+4. **Safe Demo**: All transactions are simulated - no real assets are moved
 
-### Web3 Wallet Integration
-1. **Top Menu Bar**: Connect your wallet using the "Connect Wallet" button in the top-right corner
-2. **Price Conversion**: Enter an amount and click "Convert to [Asset]" to see conversion results
-3. **Wallet Simulation**: After seeing conversion results, click "🎯 Simulate Conversion with Wallet" to trigger wallet requirements
-4. **Smart Wallet Modal**: 
-   - **Not Connected**: Shows wallet connection options
-   - **Wrong Network**: Prompts to switch to Ethereum Mainnet for wBTC/ETH
-   - **Solana Assets**: Shows "incorrect blockchain network" warning with "Solana currently unsupported" message
-   - **Ready**: Shows "🎯 Proceed with Demo Conversion" button
-5. **Network Switching**: One-click network switching when connected to wrong network
-6. **Demo Mode**: Safe conversion demonstration with toast notifications
+### ⚡ Key Features
+
+- **Real-time Prices**: Auto-updates every 30 seconds with smooth animations
+- **BigInt Precision**: Bank-grade calculations with no floating-point errors
+- **Smart Switching**: Converted amounts transfer seamlessly when switching currencies
+- **Multi-Asset Support**: USD, wBTC (8 decimals), ETH (18 decimals), SOL (9 decimals)
+- **Responsive Design**: Works on desktop and mobile devices
 
 ## Mathematical Precision
 
