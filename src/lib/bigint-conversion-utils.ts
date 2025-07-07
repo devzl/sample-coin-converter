@@ -43,7 +43,7 @@ export function formatAssetAmount(amount: bigint, decimals: number): string {
  */
 export function formatAssetAmountForDisplay(amount: bigint, decimals: number): string {
   const formatted = formatUnits(amount, decimals);
-  
+
   if (decimals === 2) {
     // For fiat currencies like USD, format with commas and 2 decimals
     const numValue = parseFloat(formatted);
@@ -54,20 +54,20 @@ export function formatAssetAmountForDisplay(amount: bigint, decimals: number): s
   } else {
     // For crypto assets, handle all cases properly
     const numValue = parseFloat(formatted);
-    
+
     // If amount is 0, just return "0"
     if (amount === BigInt(0)) {
-      return "0";
+      return '0';
     }
-    
+
     // If very small amount that would show as 0, use scientific notation
     if (numValue > 0 && numValue < 0.00000001) {
       return numValue.toExponential(2);
     }
-    
+
     // For normal amounts, remove trailing zeros but ensure we show the value
     const trimmed = formatted.replace(/\.?0+$/, '');
-    
+
     // Safety check - if trimmed is empty or just a decimal point, show the number value
     if (!trimmed || trimmed === '.' || trimmed === '0') {
       if (numValue > 0) {
@@ -80,9 +80,9 @@ export function formatAssetAmountForDisplay(amount: bigint, decimals: number): s
           return numValue.toExponential(2);
         }
       }
-      return "0";
+      return '0';
     }
-    
+
     return trimmed;
   }
 }
@@ -97,7 +97,7 @@ export function validateAssetInput(value: string): { isValid: boolean; error?: s
 
   // Check for valid number format
   const numValue = parseFloat(value);
-  
+
   if (isNaN(numValue)) {
     return { isValid: false, error: 'Please enter a valid number' };
   }
@@ -121,7 +121,7 @@ export function validateAssetInput(value: string): { isValid: boolean; error?: s
 
 /**
  * Convert from base asset to quote asset using BigInt precision
- * Example: convertToQuoteAsset("100", 2, "50000", 0, 8) 
+ * Example: convertToQuoteAsset("100", 2, "50000", 0, 8)
  * -> 100 USD at $50,000 per unit = 0.002 BTC
  */
 export function convertToQuoteAsset(
@@ -134,16 +134,16 @@ export function convertToQuoteAsset(
   // Parse amounts to BigInt
   const baseAmountBigInt = parseAssetAmount(baseAmount, baseDecimals);
   const priceBigInt = parseAssetAmount(price, priceDecimals);
-  
+
   // For quote asset calculation: baseAmount / price
   // We need to scale the numerator to maintain precision
   // Scale up by both quote decimals and price decimals to avoid truncation
   const scaleFactor = BigInt(10) ** BigInt(quoteDecimals + priceDecimals);
   const numerator = baseAmountBigInt * scaleFactor;
-  const denominator = priceBigInt * (BigInt(10) ** BigInt(baseDecimals));
-  
+  const denominator = priceBigInt * BigInt(10) ** BigInt(baseDecimals);
+
   const result = numerator / denominator;
-  
+
   return result;
 }
 
@@ -162,14 +162,14 @@ export function convertToBaseAsset(
   // Parse amounts to BigInt
   const quoteAmountBigInt = parseAssetAmount(quoteAmount, quoteDecimals);
   const priceBigInt = parseAssetAmount(price, priceDecimals);
-  
+
   // For base asset calculation: quoteAmount * price
   // Scale the calculation to maintain precision
-  const numerator = quoteAmountBigInt * priceBigInt * (BigInt(10) ** BigInt(baseDecimals));
-  const denominator = (BigInt(10) ** BigInt(priceDecimals)) * (BigInt(10) ** BigInt(quoteDecimals));
-  
+  const numerator = quoteAmountBigInt * priceBigInt * BigInt(10) ** BigInt(baseDecimals);
+  const denominator = BigInt(10) ** BigInt(priceDecimals) * BigInt(10) ** BigInt(quoteDecimals);
+
   const result = numerator / denominator;
-  
+
   return result;
 }
 
@@ -194,7 +194,7 @@ export function performSafeBigIntConversion(
   }
 
   const validation = validateAssetInput(inputValue);
-  
+
   if (!validation.isValid) {
     return {
       amount: BigInt(0),
@@ -209,9 +209,9 @@ export function performSafeBigIntConversion(
     // For crypto prices, we'll use 8 decimal places for precision
     const priceString = price.toFixed(8);
     const priceDecimals = 8;
-    
+
     let resultAmount: bigint;
-    
+
     if (fromBaseToQuote) {
       // Convert from base (USD) to quote (crypto)
       resultAmount = convertToQuoteAsset(
@@ -256,7 +256,7 @@ export function createPreciseConversionResult(
 ): PreciseConversionResult {
   const formatted = formatAssetAmountForDisplay(amount, asset.decimals);
   const humanReadable = formatAssetAmount(amount, asset.decimals);
-  
+
   return {
     amount,
     asset,
@@ -264,7 +264,3 @@ export function createPreciseConversionResult(
     humanReadable,
   };
 }
-
-
-
- 

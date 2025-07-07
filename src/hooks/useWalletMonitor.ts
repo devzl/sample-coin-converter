@@ -1,6 +1,11 @@
 import { useEffect, useRef, useMemo } from 'react';
 import { useAccount, useChainId } from 'wagmi';
-import { WalletState, WalletStatus, hasWalletStateChanged, shouldAutoCloseModal } from '@/lib/wallet-utils';
+import {
+  WalletState,
+  WalletStatus,
+  hasWalletStateChanged,
+  shouldAutoCloseModal,
+} from '@/lib/wallet-utils';
 import { getAssetNetworkRequirement, isEthereumCompatibleNetwork } from '@/lib/network-utils';
 
 export interface WalletMonitorConfig {
@@ -37,51 +42,48 @@ export function useWalletMonitor(config: WalletMonitorConfig = {}): WalletMonito
 
   const { address, isConnected, status } = useAccount();
   const chainId = useChainId();
-  
+
   const previousStateRef = useRef<WalletState | null>(null);
   const wasConnectedRef = useRef(false);
 
   // Current wallet state
-  const walletState: WalletState = useMemo(() => ({
-    isConnected,
-    address,
-    chainId,
-    status: status as WalletStatus,
-  }), [isConnected, address, chainId, status]);
+  const walletState: WalletState = useMemo(
+    () => ({
+      isConnected,
+      address,
+      chainId,
+      status: status as WalletStatus,
+    }),
+    [isConnected, address, chainId, status]
+  );
 
   // Track connection changes
   useEffect(() => {
     if (!trackConnectionChanges) return;
 
     const previousState = previousStateRef.current;
-    
+
     if (hasWalletStateChanged(previousState, walletState)) {
       // Handle wallet connection
       if (!previousState?.isConnected && walletState.isConnected && address) {
         onWalletConnected?.(address);
         wasConnectedRef.current = true;
       }
-      
+
       // Handle wallet disconnection
       if (shouldAutoCloseModal(walletState, wasConnectedRef.current)) {
         onWalletDisconnected?.();
         wasConnectedRef.current = false;
       }
-      
+
       previousStateRef.current = walletState;
     }
-  }, [
-    walletState,
-    onWalletConnected,
-    onWalletDisconnected,
-    trackConnectionChanges,
-    address,
-  ]);
+  }, [walletState, onWalletConnected, onWalletDisconnected, trackConnectionChanges, address]);
 
   // Track network changes
   useEffect(() => {
     if (!trackNetworkChanges || !chainId) return;
-    
+
     const previousState = previousStateRef.current;
     if (previousState?.chainId !== chainId) {
       onNetworkChanged?.(chainId);
@@ -101,10 +103,10 @@ export function useWalletMonitor(config: WalletMonitorConfig = {}): WalletMonito
    */
   const isCorrectNetwork = (assetSymbol?: string): boolean => {
     if (!chainId || !assetSymbol) return true;
-    
+
     const requirement = getAssetNetworkRequirement(assetSymbol);
     if (!requirement.requiredChainId) return true; // No specific requirement
-    
+
     return isEthereumCompatibleNetwork(chainId);
   };
 
@@ -113,9 +115,10 @@ export function useWalletMonitor(config: WalletMonitorConfig = {}): WalletMonito
    */
   const networkCompatibility = {
     isCompatible: chainId ? isEthereumCompatibleNetwork(chainId) : false,
-    reason: chainId && !isEthereumCompatibleNetwork(chainId) 
-      ? 'Connected to unsupported network' 
-      : undefined,
+    reason:
+      chainId && !isEthereumCompatibleNetwork(chainId)
+        ? 'Connected to unsupported network'
+        : undefined,
   };
 
   return {
@@ -131,11 +134,11 @@ export function useWalletMonitor(config: WalletMonitorConfig = {}): WalletMonito
 export function useWalletState(): WalletState {
   const { address, isConnected, status } = useAccount();
   const chainId = useChainId();
-  
+
   return {
     isConnected,
     address,
     chainId,
     status: status as WalletStatus,
   };
-} 
+}

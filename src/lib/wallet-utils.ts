@@ -3,7 +3,11 @@ import { Address } from 'viem';
 /**
  * Format wallet address for display
  */
-export function formatWalletAddress(address: Address | undefined, prefixLength = 6, suffixLength = 4): string {
+export function formatWalletAddress(
+  address: Address | undefined,
+  prefixLength = 6,
+  suffixLength = 4
+): string {
   if (!address) return '';
   return `${address.slice(0, prefixLength)}...${address.slice(-suffixLength)}`;
 }
@@ -37,12 +41,9 @@ export interface WalletState {
 /**
  * Check if wallet state has changed significantly
  */
-export function hasWalletStateChanged(
-  previous: WalletState | null,
-  current: WalletState
-): boolean {
+export function hasWalletStateChanged(previous: WalletState | null, current: WalletState): boolean {
   if (!previous) return true;
-  
+
   return (
     previous.isConnected !== current.isConnected ||
     previous.address !== current.address ||
@@ -61,7 +62,7 @@ export function getWalletDisplayText(walletState: WalletState): {
   if (!walletState.isConnected) {
     return { status: 'Not Connected' };
   }
-  
+
   return {
     status: 'Connected',
     address: formatWalletAddress(walletState.address),
@@ -76,4 +77,4 @@ export function shouldAutoCloseModal(
   previouslyConnected: boolean
 ): boolean {
   return previouslyConnected && !walletState.isConnected && walletState.status === 'disconnected';
-} 
+}

@@ -43,4 +43,4 @@ export function useContractData(contractAddress?: string): ContractDataResult {
     isLoading: decimalsLoading || symbolLoading,
     isConnected,
   };
-} 
+}

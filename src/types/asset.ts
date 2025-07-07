@@ -74,19 +74,19 @@ export const ASSETS: Record<string, AssetConfig> = {
 
 // Predefined asset pairs
 export const ASSET_PAIRS: Record<string, AssetPair> = {
-  'USD_WBTC': {
+  USD_WBTC: {
     base: ASSETS.USD,
     quote: ASSETS.WBTC,
     apiEndpoint: 'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd',
     priceKey: 'bitcoin.usd',
   },
-  'USD_ETH': {
+  USD_ETH: {
     base: ASSETS.USD,
     quote: ASSETS.ETH,
     apiEndpoint: 'https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd',
     priceKey: 'ethereum.usd',
   },
-  'USD_SOL': {
+  USD_SOL: {
     base: ASSETS.USD,
     quote: ASSETS.SOL,
     apiEndpoint: 'https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd',
@@ -95,4 +95,4 @@ export const ASSET_PAIRS: Record<string, AssetPair> = {
 };
 
 export type AssetType = keyof typeof ASSETS;
-export type AssetPairType = keyof typeof ASSET_PAIRS; 
+export type AssetPairType = keyof typeof ASSET_PAIRS;

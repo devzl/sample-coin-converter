@@ -1,5 +1,9 @@
 import { CheckCircle } from 'lucide-react';
-import { ConversionResult as ConversionResultType, PreciseConversionResult, PriceData } from '@/types/asset';
+import {
+  ConversionResult as ConversionResultType,
+  PreciseConversionResult,
+  PriceData,
+} from '@/types/asset';
 import { formatAssetAmount } from '@/lib/asset-api';
 
 interface ConversionResultProps {
@@ -27,14 +31,18 @@ export function ConversionResult({ result, priceData }: ConversionResultProps) {
       </div>
       <p className="text-lg">
         <span className="font-bold">
-          Amount of {result.asset.symbol}: {result.formatted} {getDisplaySuffix(result.asset.symbol)}
+          Amount of {result.asset.symbol}: {result.formatted}{' '}
+          {getDisplaySuffix(result.asset.symbol)}
         </span>
       </p>
       <p className="text-sm text-muted-foreground mt-1">
-        Exchange rate: 1 {priceData.pair.quote.symbol} = {' '}
-        {priceData.pair.base.icon && !priceData.pair.base.icon.startsWith('http') ? priceData.pair.base.icon : ''}
-        {formatAssetAmount(priceData.price, priceData.pair.base.decimals)} {priceData.pair.base.symbol}
+        Exchange rate: 1 {priceData.pair.quote.symbol} ={' '}
+        {priceData.pair.base.icon && !priceData.pair.base.icon.startsWith('http')
+          ? priceData.pair.base.icon
+          : ''}
+        {formatAssetAmount(priceData.price, priceData.pair.base.decimals)}{' '}
+        {priceData.pair.base.symbol}
       </p>
     </div>
   );
-} 
+}

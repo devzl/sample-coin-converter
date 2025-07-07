@@ -13,9 +13,7 @@ export function ErrorDisplay({ title, message }: ErrorDisplayProps) {
         <AlertCircle className="h-5 w-5 text-destructive" />
         <span className="font-medium text-destructive">{title}</span>
       </div>
-      <p className="text-sm text-destructive">
-        {message}
-      </p>
+      <p className="text-sm text-destructive">{message}</p>
     </div>
   );
-} 
+}

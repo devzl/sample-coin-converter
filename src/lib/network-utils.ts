@@ -57,7 +57,7 @@ export function getAssetNetworkRequirement(assetSymbol: string): {
 } {
   const ethereumAssets = ['wBTC', 'ETH'];
   const solanaAssets = ['SOL'];
-  
+
   if (ethereumAssets.includes(assetSymbol)) {
     return {
       requiredChainId: SUPPORTED_CHAIN_ID,
@@ -65,7 +65,7 @@ export function getAssetNetworkRequirement(assetSymbol: string): {
       networkName: SUPPORTED_CHAIN_NAME,
     };
   }
-  
+
   if (solanaAssets.includes(assetSymbol)) {
     return {
       requiredChainId: null, // Solana doesn't use EVM chain IDs
@@ -73,11 +73,11 @@ export function getAssetNetworkRequirement(assetSymbol: string): {
       networkName: 'Solana',
     };
   }
-  
+
   // USD or other assets - no specific requirement (Even if USD is not technically a coin, but for this demo we treat it as such)
   return {
     requiredChainId: null,
     isSupported: true,
     networkName: 'Any',
   };
-} 
+}

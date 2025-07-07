@@ -9,10 +9,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { AssetPair, PreciseConversionResult, AssetConfig } from '@/types/asset';
 import { useAssetPrice } from '@/hooks/useAssetPrice';
 import { useContractData } from '@/hooks/useContractData';
-import { 
-  performSafeBigIntConversion, 
+import {
+  performSafeBigIntConversion,
   createPreciseConversionResult,
-  validateAssetInput as validateBigIntInput 
+  validateAssetInput as validateBigIntInput,
 } from '@/lib/bigint-conversion-utils';
 import { PriceDisplay } from '@/components/asset/price-display';
 import { CurrencyInput } from '@/components/asset/currency-input';
@@ -28,10 +28,10 @@ interface ConfigurableAssetConverterProps {
   description?: string;
 }
 
-export default function ConfigurableAssetConverter({ 
-  assetPair, 
-  title = "Asset Converter", 
-  description 
+export default function ConfigurableAssetConverter({
+  assetPair,
+  title = 'Asset Converter',
+  description,
 }: ConfigurableAssetConverterProps) {
   const [inputValue, setInputValue] = useState('');
   const [inputAsset, setInputAsset] = useState<AssetConfig>(assetPair.base);
@@ -53,8 +53,9 @@ export default function ConfigurableAssetConverter({
     }
   }, [isConnected, status, showWalletModal]);
 
-  const outputAsset: AssetConfig = inputAsset.id === assetPair.base.id ? assetPair.quote : assetPair.base;
-  
+  const outputAsset: AssetConfig =
+    inputAsset.id === assetPair.base.id ? assetPair.quote : assetPair.base;
+
   // Read contract data for assets with contract addresses (like wBTC)
   const contractData = useContractData(outputAsset.contractAddress);
 
@@ -93,10 +94,10 @@ export default function ConfigurableAssetConverter({
 
   const handleInputChange = (value: string) => {
     setInputValue(value);
-    
+
     // Always clear validation error first
     setValidationError(null);
-    
+
     // Only validate if there's actual input
     if (value.trim()) {
       const validation = validateBigIntInput(value);
@@ -138,7 +139,7 @@ export default function ConfigurableAssetConverter({
 
     try {
       const fromBaseToQuote = inputAsset.id === assetPair.base.id;
-      
+
       // Use the precise BigInt conversion
       const conversionResult = performSafeBigIntConversion(
         inputValue,
@@ -155,10 +156,7 @@ export default function ConfigurableAssetConverter({
       }
 
       // Create the precise conversion result
-      const preciseResult = createPreciseConversionResult(
-        conversionResult.amount,
-        outputAsset
-      );
+      const preciseResult = createPreciseConversionResult(conversionResult.amount, outputAsset);
 
       setConversionResult(preciseResult);
     } catch (error) {
@@ -176,22 +174,23 @@ export default function ConfigurableAssetConverter({
 
   const handleSwitchCurrencies = async () => {
     const newInputAsset = inputAsset.id === assetPair.base.id ? assetPair.quote : assetPair.base;
-    
+
     // If there's a conversion result, move the converted amount to the input and auto-convert
     if (conversionResult && priceData && !error) {
       // Use the humanReadable format for the input
       const humanReadableAmount = conversionResult.humanReadable;
-      
+
       setInputValue(humanReadableAmount);
       setInputAsset(newInputAsset);
       setConversionResult(null);
       setValidationError(null);
-      
+
       // Auto-convert the switched amount
       try {
-        const newOutputAsset = newInputAsset.id === assetPair.base.id ? assetPair.quote : assetPair.base;
+        const newOutputAsset =
+          newInputAsset.id === assetPair.base.id ? assetPair.quote : assetPair.base;
         const fromBaseToQuote = newInputAsset.id === assetPair.base.id;
-        
+
         // Use the precise BigInt conversion for auto-conversion
         const newConversionResult = performSafeBigIntConversion(
           humanReadableAmount,
@@ -244,9 +243,7 @@ export default function ConfigurableAssetConverter({
           <CardTitle className="flex items-center justify-between">
             <span>{title}</span>
           </CardTitle>
-          <CardDescription>
-            {getDescription()}
-          </CardDescription>
+          <CardDescription>{getDescription()}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           {/* Price Display */}
@@ -274,8 +271,15 @@ export default function ConfigurableAssetConverter({
             {/* Convert Button */}
             <Button
               onClick={handleConvert}
-              disabled={!inputValue.trim() || isLoading || !!validationError || isConverting || !!error || !priceData}
-              className={`w-full ${(!inputValue.trim() || isLoading || !!validationError || isConverting || !!error || !priceData) ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+              disabled={
+                !inputValue.trim() ||
+                isLoading ||
+                !!validationError ||
+                isConverting ||
+                !!error ||
+                !priceData
+              }
+              className={`w-full ${!inputValue.trim() || isLoading || !!validationError || isConverting || !!error || !priceData ? 'cursor-not-allowed' : 'cursor-pointer'}`}
             >
               {isConverting ? (
                 <>
@@ -294,7 +298,7 @@ export default function ConfigurableAssetConverter({
           {conversionResult && !error && priceData && (
             <div className="space-y-4">
               <ConversionResult result={conversionResult} priceData={priceData} />
-              
+
               {/* Demo Conversion Button */}
               <Button
                 onClick={() => setShowWalletModal(true)}
@@ -308,26 +312,25 @@ export default function ConfigurableAssetConverter({
 
           {/* Error Display - Only show when there's an error and no conversion result */}
           {error && !conversionResult && (
-            <ErrorDisplay 
-              title="Error" 
-              message={error.message || `Failed to fetch ${assetPair.quote.symbol} price. Please try again.`} 
+            <ErrorDisplay
+              title="Error"
+              message={
+                error.message ||
+                `Failed to fetch ${assetPair.quote.symbol} price. Please try again.`
+              }
             />
           )}
 
           {/* Validation Error Display */}
           {validationError && (
-            <ErrorDisplay 
-              title="Validation Error" 
-              message={validationError} 
-              type="validation" 
-            />
+            <ErrorDisplay title="Validation Error" message={validationError} type="validation" />
           )}
         </CardContent>
       </Card>
 
       {/* Contract Information */}
       <ContractInfo asset={assetPair.quote} />
-      
+
       {/* Wallet Modal */}
       {showWalletModal && (
         <ConversionWalletModal
@@ -338,4 +341,4 @@ export default function ConfigurableAssetConverter({
       )}
     </div>
   );
-} 
+}

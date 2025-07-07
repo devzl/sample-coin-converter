@@ -5,16 +5,13 @@ import { injected, metaMask, walletConnect } from 'wagmi/connectors';
 const projectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID;
 
 function createConnectors() {
-  const baseConnectors = [
-    injected(),
-    metaMask(),
-  ];
+  const baseConnectors = [injected(), metaMask()];
 
   // Only add WalletConnect if we have a valid project ID
   if (projectId && projectId.trim() !== '') {
     return [
       ...baseConnectors,
-      walletConnect({ 
+      walletConnect({
         projectId,
         metadata: {
           name: 'wBTC Asset Converter',
@@ -22,7 +19,7 @@ function createConnectors() {
           url: 'https://your-app.com',
           icons: ['https://your-app.com/logo.png'],
         },
-      })
+      }),
     ];
   }
 
@@ -38,4 +35,4 @@ export const config = createConfig({
   ssr: false,
 });
 
-// Chain constants moved to src/lib/network-utils.ts for better organization 
+// Chain constants moved to src/lib/network-utils.ts for better organization

@@ -1,0 +1,14 @@
+node_modules/
+.next/
+.git/
+.vscode/
+dist/
+build/
+coverage/
+*.lock
+*.log
+package-lock.json
+bun.lock
+.env*
+public/
+*.md 

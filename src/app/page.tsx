@@ -21,9 +21,9 @@ export default function Home() {
             Convert between USD and popular cryptocurrencies with Web3 wallet integration
           </p>
         </div>
-        
+
         {/* Configurable Asset Converter */}
-        <ConfigurableAssetConverter 
+        <ConfigurableAssetConverter
           assetPair={assetPair}
           title={`${assetPair.base.symbol}/${assetPair.quote.symbol} Converter`}
           description={`Convert between ${assetPair.base.name} and ${assetPair.quote.name} with real-time pricing`}

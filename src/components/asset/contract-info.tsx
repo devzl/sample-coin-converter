@@ -17,11 +17,11 @@ export function ContractInfo({ asset }: ContractInfoProps) {
       </CardHeader>
       <CardContent>
         <p className="text-sm text-muted-foreground">
-          {asset.name} {asset.symbol === 'wBTC' && (
+          {asset.name}{' '}
+          {asset.symbol === 'wBTC' && (
             <>
-              is an ERC-20 token backed 1:1 with Bitcoin. 
-              It brings Bitcoin&apos;s liquidity to the Ethereum ecosystem, enabling Bitcoin holders 
-              to participate in DeFi applications.
+              is an ERC-20 token backed 1:1 with Bitcoin. It brings Bitcoin&apos;s liquidity to the
+              Ethereum ecosystem, enabling Bitcoin holders to participate in DeFi applications.
             </>
           )}
         </p>
@@ -39,11 +39,9 @@ export function ContractInfo({ asset }: ContractInfoProps) {
           </p>
         )}
         {asset.network && (
-          <p className="text-xs text-muted-foreground mt-1">
-            Network: {asset.network}
-          </p>
+          <p className="text-xs text-muted-foreground mt-1">Network: {asset.network}</p>
         )}
       </CardContent>
     </Card>
   );
-} 
+}

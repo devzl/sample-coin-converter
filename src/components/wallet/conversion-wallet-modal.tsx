@@ -6,7 +6,12 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { Wallet, WifiOff, AlertTriangle, CheckCircle } from 'lucide-react';
-import { SUPPORTED_CHAIN_ID, SUPPORTED_CHAIN_NAME, getNetworkName, getAssetNetworkRequirement } from '@/lib/network-utils';
+import {
+  SUPPORTED_CHAIN_ID,
+  SUPPORTED_CHAIN_NAME,
+  getNetworkName,
+  getAssetNetworkRequirement,
+} from '@/lib/network-utils';
 import { formatWalletAddress } from '@/lib/wallet-utils';
 import { useWalletMonitor } from '@/hooks/useWalletMonitor';
 import { AssetPair } from '@/types/asset';
@@ -17,13 +22,13 @@ interface ConversionWalletModalProps {
   onDemoConversion: () => void;
 }
 
-export default function ConversionWalletModal({ 
-  assetPair, 
-  onClose, 
-  onDemoConversion 
+export default function ConversionWalletModal({
+  assetPair,
+  onClose,
+  onDemoConversion,
 }: ConversionWalletModalProps) {
   const { switchChain, isPending } = useSwitchChain();
-  
+
   // Use the reusable wallet monitor hook
   const { walletState, isCorrectNetwork } = useWalletMonitor({
     onWalletDisconnected: onClose,
@@ -114,7 +119,8 @@ export default function ConversionWalletModal({
             Wallet Required for Conversion
           </CardTitle>
           <CardDescription>
-            Connect your wallet to proceed with the {assetPair.base.symbol} to {assetPair.quote.symbol} conversion
+            Connect your wallet to proceed with the {assetPair.base.symbol} to{' '}
+            {assetPair.quote.symbol} conversion
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -128,7 +134,8 @@ export default function ConversionWalletModal({
               <div>
                 <p className="font-medium">Current Network:</p>
                 <p className={`text-sm ${isNetworkCorrect ? 'text-green-600' : 'text-amber-600'}`}>
-                  {currentChainId ? getNetworkName(currentChainId) : 'Unknown'} {currentChainId && `(Chain ID: ${currentChainId})`}
+                  {currentChainId ? getNetworkName(currentChainId) : 'Unknown'}{' '}
+                  {currentChainId && `(Chain ID: ${currentChainId})`}
                 </p>
               </div>
             </div>
@@ -143,45 +150,28 @@ export default function ConversionWalletModal({
 
           {/* Action Buttons */}
           <div className="flex flex-col gap-2">
-            {networkStatus.action === 'connect' && (
-              <ConnectKitButton />
-            )}
+            {networkStatus.action === 'connect' && <ConnectKitButton />}
 
             {networkStatus.action === 'switch' && (
-              <Button 
-                onClick={handleSwitchNetwork} 
-                disabled={isPending}
-                className="w-full"
-              >
+              <Button onClick={handleSwitchNetwork} disabled={isPending} className="w-full">
                 {isPending ? 'Switching...' : `Switch to ${SUPPORTED_CHAIN_NAME}`}
               </Button>
             )}
 
             {networkStatus.action === 'convert' && (
-              <Button 
-                onClick={handleDemoConversion}
-                className="w-full cursor-pointer"
-              >
+              <Button onClick={handleDemoConversion} className="w-full cursor-pointer">
                 🎯 Proceed with Demo Conversion
               </Button>
             )}
 
             {networkStatus.action === 'unsupported' && (
-              <Button 
-                variant="secondary"
-                disabled
-                className="w-full"
-              >
+              <Button variant="secondary" disabled className="w-full">
                 Solana Not Supported
               </Button>
             )}
 
             {/* Close Button */}
-            <Button 
-              variant="outline" 
-              onClick={onClose}
-              className="w-full"
-            >
+            <Button variant="outline" onClick={onClose} className="w-full">
               Cancel
             </Button>
           </div>
@@ -194,4 +184,4 @@ export default function ConversionWalletModal({
       </Card>
     </div>
   );
-} 
+}

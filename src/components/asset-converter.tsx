@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useBitcoinPrice } from '@/hooks/useBitcoinPrice';
 import { validateInput, convertUsdToWbtc, convertWbtcToUsd, formatNumber } from '@/lib/api';
+import { ASSETS } from '@/types/asset';
 
 type CurrencyType = 'USD' | 'wBTC';
 
@@ -61,7 +62,7 @@ export default function AssetConverter() {
   const handleInputChange = (value: string) => {
     setInputValue(value);
     setValidationError(null);
-    
+
     // Validate input format
     const validation = validateInput(value, inputCurrency === 'wBTC');
     if (value.trim() && !validation.isValid) {
@@ -118,25 +119,26 @@ export default function AssetConverter() {
 
   const handleSwitchCurrencies = async () => {
     const newCurrency = inputCurrency === 'USD' ? 'wBTC' : 'USD';
-    
+
     // If there's a conversion result, move the converted amount to the input and auto-convert
     if (conversionResult && bitcoinPrice && !error) {
       // Format the amount according to the new currency's precision
-      const formattedAmount = newCurrency === 'wBTC' 
-        ? conversionResult.amount.toFixed(8).replace(/\.?0+$/, '') // Remove trailing zeros for wBTC
-        : conversionResult.amount.toFixed(2); // Keep 2 decimals for USD
-      
+      const formattedAmount =
+        newCurrency === 'wBTC'
+          ? conversionResult.amount.toFixed(8).replace(/\.?0+$/, '') // Remove trailing zeros for wBTC
+          : conversionResult.amount.toFixed(2); // Keep 2 decimals for USD
+
       setInputValue(formattedAmount);
       setInputCurrency(newCurrency);
       setConversionResult(null);
       setValidationError(null);
-      
+
       // Auto-convert the switched amount
       try {
         const inputAmount = conversionResult.amount;
         let outputAmount: number;
         const outputCurrency = newCurrency === 'USD' ? 'wBTC' : 'USD';
-        
+
         if (newCurrency === 'USD') {
           // Input is now USD, convert to wBTC
           outputAmount = convertUsdToWbtc(inputAmount, bitcoinPrice.priceUsd);
@@ -144,10 +146,10 @@ export default function AssetConverter() {
           // Input is now wBTC, convert to USD
           outputAmount = convertWbtcToUsd(inputAmount, bitcoinPrice.priceUsd);
         }
-        
+
         const decimals = outputCurrency === 'wBTC' ? 8 : 2;
         const formatted = formatNumber(outputAmount, decimals);
-        
+
         setConversionResult({
           amount: outputAmount,
           currency: outputCurrency,
@@ -181,10 +183,10 @@ export default function AssetConverter() {
 
   const formatInputValue = (value: string, currency: CurrencyType): string => {
     if (!value) return value;
-    
+
     // Don't format while typing
     if (value.endsWith('.')) return value;
-    
+
     const parts = value.split('.');
     if (parts.length === 2) {
       const decimals = parts[1];
@@ -193,7 +195,7 @@ export default function AssetConverter() {
         return `${parts[0]}.${decimals.slice(0, maxDecimals)}`;
       }
     }
-    
+
     return value;
   };
 
@@ -209,14 +211,14 @@ export default function AssetConverter() {
               onClick={handleRefresh}
               disabled={isLoading || isManualRefreshing}
               title="Refresh now"
-              className={`${(isLoading || isManualRefreshing) ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+              className={`${isLoading || isManualRefreshing ? 'cursor-not-allowed' : 'cursor-pointer'}`}
             >
-              <RefreshCw className={`h-4 w-4 ${(isLoading || isManualRefreshing) ? 'animate-spin' : ''}`} />
+              <RefreshCw
+                className={`h-4 w-4 ${isLoading || isManualRefreshing ? 'animate-spin' : ''}`}
+              />
             </Button>
           </CardTitle>
-          <CardDescription>
-            Convert between USD and Wrapped Bitcoin (wBTC)
-          </CardDescription>
+          <CardDescription>Convert between USD and Wrapped Bitcoin (wBTC)</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           {/* Price Display */}
@@ -226,7 +228,9 @@ export default function AssetConverter() {
               {isLoading ? (
                 <div className="animate-pulse bg-muted-foreground/20 h-6 w-24 rounded" />
               ) : bitcoinPrice ? (
-                <span className={`text-lg font-bold transition-all duration-300 ${priceChangeAnimation ? 'scale-105 text-muted-foreground' : ''}`}>
+                <span
+                  className={`text-lg font-bold transition-all duration-300 ${priceChangeAnimation ? 'scale-105 text-muted-foreground' : ''}`}
+                >
                   ${formatNumber(bitcoinPrice.priceUsd, 2)}
                 </span>
               ) : (
@@ -243,38 +247,38 @@ export default function AssetConverter() {
           {/* Input Section */}
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="amount">
-                Amount ({inputCurrency})
-              </Label>
+              <Label htmlFor="amount">Amount ({inputCurrency})</Label>
               <div className="relative">
                 <Input
                   id="amount"
                   type="number"
                   placeholder={`Enter ${inputCurrency} amount`}
                   value={inputValue}
-                  onChange={(e) => handleInputChange(formatInputValue(e.target.value, inputCurrency))}
+                  onChange={(e) =>
+                    handleInputChange(formatInputValue(e.target.value, inputCurrency))
+                  }
                   className={`pr-12 ${validationError ? 'border-destructive' : ''}`}
                   step={inputCurrency === 'wBTC' ? '0.00000001' : '0.01'}
                   min="0"
                 />
-                                 {inputCurrency === 'wBTC' && (
-                   <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                     <Image
-                       src="https://assets.coingecko.com/coins/images/7598/standard/wrapped_bitcoin_wbtc.png?1696507857"
-                       alt="wBTC"
-                       width={24}
-                       height={24}
-                       className="h-6 w-6"
-                     />
-                   </div>
-                 )}
+                {inputCurrency === 'wBTC' && (
+                  <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                    <Image
+                      src={ASSETS.WBTC.icon!}
+                      alt={ASSETS.WBTC.symbol}
+                      width={24}
+                      height={24}
+                      className="h-6 w-6"
+                    />
+                  </div>
+                )}
                 {inputCurrency === 'USD' && (
                   <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
                     <span className="text-muted-foreground text-sm">$</span>
                   </div>
                 )}
               </div>
-              
+
               <p className="text-xs text-muted-foreground">
                 Maximum {getMaxDecimals(inputCurrency)} decimal places
               </p>
@@ -295,8 +299,15 @@ export default function AssetConverter() {
             {/* Convert Button */}
             <Button
               onClick={handleConvert}
-              disabled={!inputValue.trim() || isLoading || !!validationError || isConverting || !!error || !bitcoinPrice}
-              className={`w-full ${(!inputValue.trim() || isLoading || !!validationError || isConverting || !!error || !bitcoinPrice) ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+              disabled={
+                !inputValue.trim() ||
+                isLoading ||
+                !!validationError ||
+                isConverting ||
+                !!error ||
+                !bitcoinPrice
+              }
+              className={`w-full ${!inputValue.trim() || isLoading || !!validationError || isConverting || !!error || !bitcoinPrice ? 'cursor-not-allowed' : 'cursor-pointer'}`}
             >
               {isConverting ? (
                 <>
@@ -350,9 +361,7 @@ export default function AssetConverter() {
                 <AlertCircle className="h-5 w-5 text-destructive" />
                 <span className="font-medium text-destructive">Validation Error</span>
               </div>
-              <p className="text-sm text-destructive">
-                {validationError}
-              </p>
+              <p className="text-sm text-destructive">{validationError}</p>
             </div>
           )}
         </CardContent>
@@ -364,24 +373,24 @@ export default function AssetConverter() {
           <CardTitle className="text-lg">About wBTC</CardTitle>
         </CardHeader>
         <CardContent>
-                     <p className="text-sm text-muted-foreground">
-             Wrapped Bitcoin (wBTC) is an ERC-20 token backed 1:1 with Bitcoin. 
-             It brings Bitcoin&apos;s liquidity to the Ethereum ecosystem, enabling Bitcoin holders 
-             to participate in DeFi applications.
-           </p>
-                     <p className="text-xs text-muted-foreground mt-2">
-             wBTC Contract Address:{' '}
-             <a
-               href="https://etherscan.io/address/0x2260fac5e5542a773aa44fbcfedf7c193bc2c599"
-               target="_blank"
-               rel="noopener noreferrer"
-               className="text-primary hover:underline font-mono break-all"
-             >
-               0x2260fac5e5542a773aa44fbcfedf7c193bc2c599
-             </a>
-           </p>
+          <p className="text-sm text-muted-foreground">
+            Wrapped Bitcoin (wBTC) is an ERC-20 token backed 1:1 with Bitcoin. It brings
+            Bitcoin&apos;s liquidity to the Ethereum ecosystem, enabling Bitcoin holders to
+            participate in DeFi applications.
+          </p>
+          <p className="text-xs text-muted-foreground mt-2">
+            wBTC Contract Address:{' '}
+            <a
+              href="https://etherscan.io/address/0x2260fac5e5542a773aa44fbcfedf7c193bc2c599"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary hover:underline font-mono break-all"
+            >
+              0x2260fac5e5542a773aa44fbcfedf7c193bc2c599
+            </a>
+          </p>
         </CardContent>
       </Card>
     </div>
   );
-} 
+}

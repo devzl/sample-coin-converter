@@ -19,13 +19,13 @@ interface PriceDisplayProps {
   contractData?: ContractData;
 }
 
-export function PriceDisplay({ 
-  priceData, 
-  isLoading, 
-  isRefreshing, 
-  priceChangeAnimation, 
+export function PriceDisplay({
+  priceData,
+  isLoading,
+  isRefreshing,
+  priceChangeAnimation,
   onRefresh,
-  contractData
+  contractData,
 }: PriceDisplayProps) {
   return (
     <div className="p-4 bg-muted rounded-lg">
@@ -37,11 +37,14 @@ export function PriceDisplay({
           {isLoading ? (
             <div className="animate-pulse bg-muted-foreground/20 h-6 w-24 rounded" />
           ) : priceData ? (
-            <span className={`text-lg font-bold transition-all duration-300 ${priceChangeAnimation ? 'scale-105 text-muted-foreground' : ''}`}>
-              {priceData.pair.base.icon && typeof priceData.pair.base.icon === 'string' && !priceData.pair.base.icon.startsWith('http') 
-                ? priceData.pair.base.icon 
-                : ''
-              }
+            <span
+              className={`text-lg font-bold transition-all duration-300 ${priceChangeAnimation ? 'scale-105 text-muted-foreground' : ''}`}
+            >
+              {priceData.pair.base.icon &&
+              typeof priceData.pair.base.icon === 'string' &&
+              !priceData.pair.base.icon.startsWith('http')
+                ? priceData.pair.base.icon
+                : ''}
               {formatAssetAmount(priceData.price, priceData.pair.base.decimals)}
             </span>
           ) : (
@@ -53,30 +56,32 @@ export function PriceDisplay({
             onClick={onRefresh}
             disabled={isLoading || isRefreshing}
             title="Refresh now"
-            className={`${(isLoading || isRefreshing) ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+            className={`${isLoading || isRefreshing ? 'cursor-not-allowed' : 'cursor-pointer'}`}
           >
-            <RefreshCw className={`h-4 w-4 ${(isLoading || isRefreshing) ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`h-4 w-4 ${isLoading || isRefreshing ? 'animate-spin' : ''}`} />
           </Button>
         </div>
       </div>
-      
+
       {/* On-chain contract data display */}
-      {contractData?.isConnected && (contractData.decimals !== null || contractData.symbol !== null) && (
-        <div className="mt-2 pt-2 border-t border-muted-foreground/20">
-          <p className="text-xs text-muted-foreground">
-            On-chain data: {contractData.isLoading ? (
-              <span className="animate-pulse">Loading...</span>
-            ) : (
-              <>
-                {contractData.symbol && <span>Symbol: {contractData.symbol}</span>}
-                {contractData.symbol && contractData.decimals !== null && <span> • </span>}
-                {contractData.decimals !== null && <span>Decimals: {contractData.decimals}</span>}
-              </>
-            )}
-          </p>
-        </div>
-      )}
-      
+      {contractData?.isConnected &&
+        (contractData.decimals !== null || contractData.symbol !== null) && (
+          <div className="mt-2 pt-2 border-t border-muted-foreground/20">
+            <p className="text-xs text-muted-foreground">
+              On-chain data:{' '}
+              {contractData.isLoading ? (
+                <span className="animate-pulse">Loading...</span>
+              ) : (
+                <>
+                  {contractData.symbol && <span>Symbol: {contractData.symbol}</span>}
+                  {contractData.symbol && contractData.decimals !== null && <span> • </span>}
+                  {contractData.decimals !== null && <span>Decimals: {contractData.decimals}</span>}
+                </>
+              )}
+            </p>
+          </div>
+        )}
+
       {priceData && (
         <p className="text-xs text-muted-foreground mt-1">
           Last updated: {priceData.lastUpdated.toLocaleTimeString()}
@@ -84,4 +89,4 @@ export function PriceDisplay({
       )}
     </div>
   );
-} 
+}

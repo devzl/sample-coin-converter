@@ -18,26 +18,26 @@ export async function fetchAssetPrice(pair: AssetPair): Promise<PriceData> {
     }
 
     const response = await fetch(pair.apiEndpoint);
-    
+
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-    
+
     const data: CoinGeckoResponse = await response.json();
-    
+
     // Extract price using the configured price key
     const priceKey = pair.priceKey || '';
     const keyParts = priceKey.split('.');
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let priceValue: any = data;
-    
+
     for (const part of keyParts) {
       priceValue = priceValue[part];
       if (priceValue === undefined) {
         throw new Error(`Price not found at key: ${priceKey}`);
       }
     }
-    
+
     return {
       price: priceValue as number,
       lastUpdated: new Date(),
@@ -89,26 +89,29 @@ export function formatAssetAmount(value: number, decimals: number): string {
  * @param asset - Asset configuration
  * @returns Validation result
  */
-export function validateAssetInput(input: string, assetDecimals: number): { isValid: boolean; error?: string } {
+export function validateAssetInput(
+  input: string,
+  assetDecimals: number
+): { isValid: boolean; error?: string } {
   if (!input.trim()) {
     return { isValid: false, error: 'Amount is required' };
   }
 
   const value = parseFloat(input);
-  
+
   if (isNaN(value) || value < 0) {
     return { isValid: false, error: 'Please enter a valid positive number' };
   }
 
   // Check decimal places
   const decimalPlaces = (input.split('.')[1] || '').length;
-  
+
   if (decimalPlaces > assetDecimals) {
-    return { 
-      isValid: false, 
-      error: `Maximum ${assetDecimals} decimal places allowed` 
+    return {
+      isValid: false,
+      error: `Maximum ${assetDecimals} decimal places allowed`,
     };
   }
 
   return { isValid: true };
-} 
+}

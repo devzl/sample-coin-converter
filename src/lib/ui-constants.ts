@@ -10,7 +10,7 @@ export const UI_CONSTANTS = {
     xl: 'gap-6',
     xxl: 'gap-8',
   },
-  
+
   padding: {
     xs: 'p-1',
     sm: 'p-2',
@@ -19,7 +19,7 @@ export const UI_CONSTANTS = {
     xl: 'p-6',
     xxl: 'p-8',
   },
-  
+
   margin: {
     xs: 'm-1',
     sm: 'm-2',
@@ -28,7 +28,7 @@ export const UI_CONSTANTS = {
     xl: 'm-6',
     xxl: 'm-8',
   },
-  
+
   maxWidth: {
     sm: 'max-w-sm',
     md: 'max-w-md',
@@ -37,14 +37,14 @@ export const UI_CONSTANTS = {
     '2xl': 'max-w-2xl',
     '4xl': 'max-w-4xl',
   },
-  
+
   borderRadius: {
     sm: 'rounded-sm',
     md: 'rounded-md',
     lg: 'rounded-lg',
     xl: 'rounded-xl',
   },
-  
+
   iconSizes: {
     xs: 'h-3 w-3',
     sm: 'h-4 w-4',
@@ -52,14 +52,14 @@ export const UI_CONSTANTS = {
     lg: 'h-6 w-6',
     xl: 'h-8 w-8',
   },
-  
+
   animations: {
     spin: 'animate-spin',
     pulse: 'animate-pulse',
     bounce: 'animate-bounce',
     fadeIn: 'animate-fade-in',
   },
-  
+
   transitions: {
     fast: 'transition-all duration-150',
     normal: 'transition-all duration-300',
@@ -76,18 +76,18 @@ export const COMPONENT_CONFIGS = {
     spacing: UI_CONSTANTS.spacing.xl,
     cardPadding: UI_CONSTANTS.padding.xl,
   },
-  
+
   assetPairSelector: {
     maxWidth: UI_CONSTANTS.maxWidth['2xl'],
     gridCols: 'grid-cols-1 sm:grid-cols-3',
     buttonPadding: UI_CONSTANTS.padding.lg,
   },
-  
+
   walletModal: {
     maxWidth: UI_CONSTANTS.maxWidth.md,
     spacing: UI_CONSTANTS.spacing.lg,
   },
-  
+
   header: {
     logoSize: UI_CONSTANTS.iconSizes.xl,
     iconSize: UI_CONSTANTS.iconSizes.sm,
@@ -115,4 +115,4 @@ export const CURSOR_STATES = {
   notAllowed: 'cursor-not-allowed',
   default: 'cursor-default',
   text: 'cursor-text',
-} as const; 
+} as const;

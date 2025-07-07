@@ -22,7 +22,7 @@ export default function AssetPairSelector({
   isCollapsibleByDefault = true,
 }: AssetPairSelectorProps) {
   const [isOpen, setIsOpen] = useState(!isCollapsibleByDefault);
-  
+
   const selectedAssetPair = ASSET_PAIRS[selectedPair];
 
   const handlePairSelect = (pairKey: AssetPairType) => {
@@ -61,17 +61,15 @@ export default function AssetPairSelector({
             <ChevronDown className={UI_CONSTANTS.iconSizes.sm} />
           )}
         </Button>
-        
+
         {isOpen && (
           <Card className="mt-2">
             <CardHeader>
               <CardTitle className="text-lg">Select Asset Pair</CardTitle>
-              <CardDescription>
-                Choose which assets you want to convert between
-              </CardDescription>
+              <CardDescription>Choose which assets you want to convert between</CardDescription>
             </CardHeader>
             <CardContent>
-              <AssetPairGrid 
+              <AssetPairGrid
                 selectedPair={selectedPair}
                 onPairSelect={handlePairSelect}
                 renderAssetIcon={renderAssetIcon}
@@ -88,12 +86,10 @@ export default function AssetPairSelector({
     <Card className={className}>
       <CardHeader>
         <CardTitle className="text-lg">Select Asset Pair</CardTitle>
-        <CardDescription>
-          Choose which assets you want to convert between
-        </CardDescription>
+        <CardDescription>Choose which assets you want to convert between</CardDescription>
       </CardHeader>
       <CardContent>
-        <AssetPairGrid 
+        <AssetPairGrid
           selectedPair={selectedPair}
           onPairSelect={handlePairSelect}
           renderAssetIcon={renderAssetIcon}
@@ -111,11 +107,13 @@ interface AssetPairGridProps {
 
 function AssetPairGrid({ selectedPair, onPairSelect, renderAssetIcon }: AssetPairGridProps) {
   return (
-    <div className={`grid ${COMPONENT_CONFIGS.assetPairSelector.gridCols} ${UI_CONSTANTS.spacing.md}`}>
+    <div
+      className={`grid ${COMPONENT_CONFIGS.assetPairSelector.gridCols} ${UI_CONSTANTS.spacing.md}`}
+    >
       {Object.entries(ASSET_PAIRS).map(([key, pair]) => (
         <Button
           key={key}
-          variant={selectedPair === key ? "default" : "outline"}
+          variant={selectedPair === key ? 'default' : 'outline'}
           onClick={() => onPairSelect(key as AssetPairType)}
           className={`h-auto ${COMPONENT_CONFIGS.assetPairSelector.buttonPadding} flex flex-col items-center ${UI_CONSTANTS.spacing.sm}`}
         >
@@ -132,4 +130,4 @@ function AssetPairGrid({ selectedPair, onPairSelect, renderAssetIcon }: AssetPai
       ))}
     </div>
   );
-} 
+}

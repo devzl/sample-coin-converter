@@ -20,4 +20,4 @@ export function CurrencySwitchButton({ onSwitch, disabled = false }: CurrencySwi
       </Button>
     </div>
   );
-} 
+}

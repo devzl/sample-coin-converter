@@ -19,13 +19,13 @@ export async function fetchBitcoinPrice(): Promise<BitcoinPriceData> {
     const response = await fetch(
       'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd'
     );
-    
+
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-    
+
     const data: BitcoinPriceResponse = await response.json();
-    
+
     return {
       priceUsd: data.bitcoin.usd,
       lastUpdated: new Date(),
@@ -76,13 +76,16 @@ export function formatNumber(value: number, decimals: number): string {
  * @param isWbtc - Whether input is wBTC (true) or USD (false)
  * @returns Validation result
  */
-export function validateInput(input: string, isWbtc: boolean): { isValid: boolean; error?: string } {
+export function validateInput(
+  input: string,
+  isWbtc: boolean
+): { isValid: boolean; error?: string } {
   if (!input.trim()) {
     return { isValid: false, error: 'Amount is required' };
   }
 
   const value = parseFloat(input);
-  
+
   if (isNaN(value) || value < 0) {
     return { isValid: false, error: 'Please enter a valid positive number' };
   }
@@ -90,13 +93,13 @@ export function validateInput(input: string, isWbtc: boolean): { isValid: boolea
   // Check decimal places
   const decimalPlaces = (input.split('.')[1] || '').length;
   const maxDecimals = isWbtc ? 8 : 2;
-  
+
   if (decimalPlaces > maxDecimals) {
-    return { 
-      isValid: false, 
-      error: `Maximum ${maxDecimals} decimal places allowed for ${isWbtc ? 'wBTC' : 'USD'}` 
+    return {
+      isValid: false,
+      error: `Maximum ${maxDecimals} decimal places allowed for ${isWbtc ? 'wBTC' : 'USD'}`,
     };
   }
 
   return { isValid: true };
-} 
+}

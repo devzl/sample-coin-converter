@@ -28,7 +28,7 @@ A modern, modular React application for converting between multiple cryptocurren
 - **Robust Error Handling**: Comprehensive error states and user-friendly error messages
 
 ### 🔗 Web3 Integration
-- **Wallet Connection**: Support for MetaMask, WalletConnect, and injected wallets
+- **Wallet Connection**: Support for MetaMask, Vultisig, WalletConnect, and injected wallets
 - **Network Validation**: Automatic Ethereum Mainnet detection and switching
 - **Blockchain Awareness**: Asset-specific network requirements with clear messaging
 - **Demo Mode**: Safe demonstration of conversion flow without real transactions
@@ -67,6 +67,7 @@ A modern, modular React application for converting between multiple cryptocurren
 - **State Management**: React hooks + React Query
 - **Web3**: wagmi + viem + ConnectKit for wallet integration
 - **Testing**: vitest + @testing-library/react + jsdom
+- **Code Formatting**: Prettier for consistent code style
 - **Precision Math**: viem (parseUnits/formatUnits) for BigInt calculations
 - **UI Components**: shadcn/ui (Alert, Button, Card, Input, Label, Sonner)
 - **API**: CoinGecko API for real-time cryptocurrency pricing
@@ -165,7 +166,7 @@ src/
    echo "NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=your_project_id_here" >> .env.local
    ```
    
-   **Note**: WalletConnect is entirely optional. The application works perfectly with browser-injected wallets (MetaMask, Coinbase Wallet, etc.) without any environment configuration. WalletConnect is only needed if you want to support mobile wallet connections via QR code scanning.
+   **Note**: WalletConnect is entirely optional. The application works perfectly with browser-injected wallets (MetaMask, Vultisig, Coinbase Wallet, etc.) without any environment configuration. WalletConnect is only needed if you want to support mobile wallet connections via QR code scanning.
 
 5. **Open your browser**
    Navigate to [http://localhost:3000](http://localhost:3000)
@@ -310,6 +311,10 @@ bun start
 # Linting
 bun lint
 
+# Code formatting with Prettier
+bun format            # Format all files
+bun format:check      # Check formatting without changes
+
 # Testing
 bun test
 bun test:ui
@@ -342,6 +347,14 @@ bun test:run
 3. **Update Tests**: Add test cases for new asset configurations
 4. **Update Image Config**: Add hostname to `next.config.ts` if using external images
 
+### Code Formatting
+The project uses **Prettier** for consistent code formatting across all files:
+
+- **Configuration**: `.prettierrc.json` - Standard rules (single quotes, 2-space tabs, 100 char width)
+- **Ignore File**: `.prettierignore` - Excludes node_modules, .next, build files
+- **Automatic Formatting**: Most editors can be configured to format on save
+- **Manual Formatting**: Use `bun format` to format all files or `bun format:check` to verify formatting
+
 ### Adding New Features
 1. **API functions**: Add to `src/lib/asset-api.ts`
 2. **Components**: Create in `src/components/asset/`
@@ -349,7 +362,8 @@ bun test:run
 4. **Types**: Define in `src/types/`
 5. **Utilities**: Add to appropriate utility files in `src/lib/`
 6. **Tests**: Create corresponding test files
-7. Follow TypeScript strict mode conventions
+7. **Format Code**: Run `bun format` before committing
+8. Follow TypeScript strict mode conventions
 
 ## Performance Optimizations
 

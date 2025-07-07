@@ -84,8 +84,9 @@ export function showPriceFetchErrorToast(assetSymbol: string): void {
  */
 export function showWalletConnectConfigWarningToast(): void {
   toast.warning('WalletConnect Not Configured', {
-    description: 'NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID not set in environment. Demo continues with injected wallets only (MetaMask, browser wallets).',
+    description:
+      'NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID not set in environment. Demo continues with injected wallets only (MetaMask, Vultisig, browser wallets).',
     duration: TOAST_CONFIG.duration.long,
     className: TOAST_CONFIG.classes.warning,
   });
-} 
+}
