@@ -55,11 +55,9 @@ export default function ConfigurableAssetConverter({
   const outputAsset: AssetConfig = inputAsset.id === assetPair.base.id ? assetPair.quote : assetPair.base;
 
   useEffect(() => {
-    // Clear conversion result when input changes
-    if (!inputValue.trim()) {
-      setConversionResult(null);
-      setValidationError(null);
-    }
+    // Clear conversion result whenever input changes
+    setConversionResult(null);
+    setValidationError(null);
   }, [inputValue]);
 
   useEffect(() => {

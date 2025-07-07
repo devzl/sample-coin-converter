@@ -265,18 +265,6 @@ export function createPreciseConversionResult(
   };
 }
 
-/**
- * Check if two BigInt amounts are equal
- */
-export function areAmountsEqual(amount1: bigint, amount2: bigint): boolean {
-  return amount1 === amount2;
-}
 
-/**
- * Check if BigInt amount is zero
- */
-export function isAmountZero(amount: bigint): boolean {
-  return amount === BigInt(0);
-}
 
  
