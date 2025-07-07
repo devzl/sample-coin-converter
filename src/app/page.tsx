@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import ConfigurableAssetConverter from '@/components/configurable-asset-converter';
+import ConfigurableAssetConverter from '@/components/asset/configurable-asset-converter';
 import AssetPairSelector from '@/components/ui/asset-pair-selector';
 import { ASSET_PAIRS, AssetPairType } from '@/types/asset';
 

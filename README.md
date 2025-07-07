@@ -91,7 +91,8 @@ src/
 │   │   ├── input.tsx
 │   │   ├── label.tsx
 │   │   └── sonner.tsx       # Toast notifications
-│   ├── asset/               # Modular asset converter components
+│   ├── asset/               # Asset converter components
+│   │   ├── configurable-asset-converter.tsx # Main orchestrator component
 │   │   ├── price-display.tsx        # Price display with refresh
 │   │   ├── currency-input.tsx       # Asset input with validation
 │   │   ├── conversion-result.tsx    # Result display with BigInt precision
@@ -102,9 +103,8 @@ src/
 │   │   └── header.tsx               # Top navigation with wallet connection
 │   ├── providers/           # Context providers
 │   │   └── web3-provider.tsx        # Web3 wallet provider
-│   ├── wallet/              # Web3 wallet components
-│   │   └── conversion-wallet-modal.tsx  # Modal for wallet requirements
-│   └── configurable-asset-converter.tsx # Main orchestrator component
+│   └── wallet/              # Web3 wallet components
+│       └── conversion-wallet-modal.tsx  # Modal for wallet requirements
 ├── hooks/
 │   ├── useAssetPrice.ts     # Generic React Query hook for asset pricing
 │   └── useWalletMonitor.ts  # Comprehensive wallet monitoring hook
@@ -135,26 +135,20 @@ src/
 
 1. **Clone the repository**
    ```bash
-   git clone <repository-url>
-   cd configurable-asset-converter
+   git clone git@github.com:devzl/sample-coin-converter.git
+   cd sample-coin-converter
    ```
 
 2. **Install dependencies**
    ```bash
    # Using bun (recommended)
    bun install
-   
-   # Or using npm
-   npm install
    ```
 
 3. **Run the development server**
    ```bash
    # Using bun
    bun dev
-   
-   # Or using npm
-   npm run dev
    ```
 
 4. **Environment Configuration (Optional - WalletConnect)**
